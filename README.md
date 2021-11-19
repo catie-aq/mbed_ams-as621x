@@ -2,4 +2,4 @@
 
 AMS AS621x driver
 
-<!-- Describe `As621x` library here -->
+An mbed C++ driver for the AMS AS621x temperature sensors.
