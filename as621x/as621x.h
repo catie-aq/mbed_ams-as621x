@@ -59,6 +59,8 @@ public:
     ErrorType read_temperature(RegisterAddress reg, double *value);
     ErrorType write_temperature(RegisterAddress reg, double value);
 
+    bool is_alert_enabled();
+
 private:
     I2C *_bus;
     uint8_t addr;

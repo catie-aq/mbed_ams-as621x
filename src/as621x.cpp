@@ -78,6 +78,11 @@ As621x::ErrorType As621x::write_temperature(RegisterAddress reg, double value)
     return this->write_register(reg, (uint16_t)temp);
 }
 
+bool As621x::is_alert_enabled()
+{
+    return this->alert_en;
+}
+
 As621x::ErrorType As621x::write_register(RegisterAddress reg, uint16_t value)
 {
     ErrorType err = ErrorType::Ok;
