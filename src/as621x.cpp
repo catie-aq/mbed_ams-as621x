@@ -33,7 +33,7 @@ As621x::As621x(I2C *bus, Add1Pin add1, Add0Pin add0): _bus(bus)
     if (add1 == Add1Pin::PullUp_VDD) {
         this->alert_en = true;
 
-        /* Add1 address bits are the same as ADD1_VSS. */
+        /* ADD1_PullUp address bits are the same as ADD1_VSS. */
         add1 = Add1Pin::VSS;
     } else {
         this->alert_en = false;
