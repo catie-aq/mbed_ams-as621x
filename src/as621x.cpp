@@ -16,6 +16,9 @@
         u = ((ba)[0] << 8) | ((ba)[1]);                                                            \
     } while (0)
 
+#define get_cfg_value(reg, name) (((reg) >> (name##_SHIFT)) & (name##_MASK))
+#define get_reg_value(cfg, name) (((cfg) & (name##_MASK)) << (name##_SHIFT))
+
 namespace sixtron {
 
 As621x::As621x(I2C *bus, Add1Pin add1, Add0Pin add0): _bus(bus)
@@ -39,13 +42,36 @@ As621x::As621x(I2C *bus, Add1Pin add1, Add0Pin add0): _bus(bus)
             << 1;
 }
 
-As621x::ErrorType As621x::read_config(uint16_t *value)
+As621x::ErrorType As621x::read_config(Config *cfg)
 {
-    return this->read_register(RegisterAddress::Config, value);
+    uint16_t value;
+    ErrorType err;
+    err = this->read_register(RegisterAddress::Config, &value);
+
+    if (err == ErrorType::Ok) {
+        cfg->alert_bit = get_cfg_value(value, ALERT);
+        cfg->cr = static_cast<ConversionRate>(get_cfg_value(value, CONVRATE));
+        cfg->sleep_mode = get_cfg_value(value, SLEEPMODE);
+        cfg->interrupt_mode = get_cfg_value(value, INTMODE);
+        cfg->polarity = get_cfg_value(value, POLARITY);
+        cfg->cf = static_cast<ConsecutiveFaults>(get_cfg_value(value, CFAULTS));
+        cfg->single_shot = get_cfg_value(value, SINGLESHOT);
+    }
+
+    return err;
 }
 
-As621x::ErrorType As621x::write_config(uint16_t value)
+As621x::ErrorType As621x::write_config(Config *cfg)
 {
+    uint16_t value = 0;
+
+    value |= get_reg_value(static_cast<uint8_t>(cfg->cr), CONVRATE);
+    value |= get_reg_value(cfg->sleep_mode, SLEEPMODE);
+    value |= get_reg_value(cfg->interrupt_mode, INTMODE);
+    value |= get_reg_value(cfg->polarity, POLARITY);
+    value |= get_reg_value(static_cast<uint8_t>(cfg->cf), CFAULTS);
+    value |= get_reg_value(cfg->single_shot, SINGLESHOT);
+
     return this->write_register(RegisterAddress::Config, value);
 }
 

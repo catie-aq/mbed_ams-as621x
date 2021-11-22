@@ -44,6 +44,20 @@ public:
         PullUp_VDD = 3,
     };
 
+    enum class ConversionRate : uint8_t {
+        _4s = 0,
+        _1s = 1,
+        _250ms = 2,
+        _125ms = 3,
+    };
+
+    enum class ConsecutiveFaults : uint8_t {
+        _1CF = 0,
+        _2CF = 1,
+        _3CF = 2,
+        _4CF = 3,
+    };
+
     enum class RegisterAddress : uint8_t {
         Tval = 0,
         Config = 1,
@@ -51,10 +65,21 @@ public:
         THigh = 3,
         Max = 4,
     };
+
+    typedef struct {
+        bool alert_bit;
+        ConversionRate cr;
+        bool sleep_mode;
+        bool interrupt_mode;
+        bool polarity;
+        ConsecutiveFaults cf;
+        bool single_shot;
+    } Config;
+
     As621x(I2C *bus, Add1Pin add1, Add0Pin add0);
 
-    ErrorType read_config(uint16_t *value);
-    ErrorType write_config(uint16_t value);
+    ErrorType read_config(Config *cfg);
+    ErrorType write_config(Config *cfg);
 
     ErrorType read_temperature(RegisterAddress reg, double *value);
     ErrorType write_temperature(RegisterAddress reg, double value);
