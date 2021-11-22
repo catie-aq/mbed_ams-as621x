@@ -24,6 +24,10 @@ namespace sixtron {
 #define SINGLESHOT_SHIFT (15)
 #define SINGLESHOT_MASK (0x1)
 
+/*!
+ *  \class As621x
+ *  AS621x temperature sensor driver
+ */
 class As621x {
 public:
     enum class ErrorType : uint8_t {
@@ -38,6 +42,7 @@ public:
         SDA = 2,
         SCL = 3,
     };
+
     enum class Add1Pin : uint8_t {
         SCL = 1,
         VSS = 2,
@@ -66,6 +71,9 @@ public:
         Max = 4,
     };
 
+    /*!
+     * \brief Configuration register data
+     */
     typedef struct {
         bool alert_bit;
         ConversionRate cr;
@@ -76,14 +84,57 @@ public:
         bool single_shot;
     } Config_t;
 
+    /*! Constructor
+     *
+     * \param bus pointer to mbed I2C object
+     * \param add1 ADD1 pin connection
+     * \param add0 ADD0 pin connection
+     */
     As621x(I2C *bus, Add1Pin add1, Add0Pin add0);
 
+    /*!
+     * \brief Read configuration register
+     *
+     * \param cfg pointer to data to store read configuration
+     *
+     * \return Ok on success, the reason of failure otherwise
+     */
     ErrorType read_config(Config_t *cfg);
+
+    /*!
+     * \brief Write configuration register
+     *
+     * \param cfg pointer to configuration structure to use
+     *
+     * \return Ok on success, the reason of failure otherwise
+     */
     ErrorType write_config(Config_t *cfg);
 
+    /*!
+     * \brief Read temperature register
+     *
+     * \param reg temperature register to read from
+     * \param value pointer to the space to store the temperature read
+     *
+     * \return Ok on success, the reason of failure otherwise
+     */
     ErrorType read_temperature(RegisterAddress reg, double *value);
+
+    /*!
+     * \brief Write temperature register
+     *
+     * \param reg temperature register to write to
+     * \param value temperature to write
+     *
+     * \return Ok on success, the reason of failure otherwise
+     */
     ErrorType write_temperature(RegisterAddress reg, double value);
 
+    /*!
+     * \brief Read alert pin enablement status
+     *
+     * \return true if alert pin is enabled, false otherwise
+     */
     bool is_alert_enabled();
 
 private:
@@ -92,7 +143,22 @@ private:
     RegisterAddress last_reg;
     bool alert_en;
 
+    /*! Set register value
+     *
+     * \param RegisterAddress register address
+     * \param value value to write
+     *
+     * \return Ok on success, the reason of failure otherwise
+     */
     ErrorType write_register(RegisterAddress reg, uint16_t value);
+
+    /*! Get register value
+     *
+     * \param RegisterAddress register address
+     * \param value pointer to store read value
+     *
+     * \return Ok on success, the reason of failure otherwise
+     */
     ErrorType read_register(RegisterAddress reg, uint16_t *value);
 };
 
