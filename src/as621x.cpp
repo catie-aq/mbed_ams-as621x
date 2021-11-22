@@ -97,7 +97,7 @@ As621x::ErrorType As621x::write_temperature(RegisterAddress reg, double value)
 {
     int16_t temp = round(value * 128);
 
-    if (reg == RegisterAddress::Config) {
+    if (reg == RegisterAddress::Config || reg == RegisterAddress::Tval) {
         return ErrorType::InvalidReg;
     }
 
@@ -126,6 +126,7 @@ As621x::ErrorType As621x::write_register(RegisterAddress reg, uint16_t value)
 
     if (this->_bus->write(this->addr, buf, 3)) {
         err = ErrorType::I2cError;
+        this->last_reg = RegisterAddress::Max;
     }
     this->last_reg = reg;
 
@@ -157,6 +158,7 @@ As621x::ErrorType As621x::read_register(RegisterAddress reg, uint16_t *value)
 
     if (this->_bus->read(this->addr, buf, 2)) {
         err = ErrorType::I2cError;
+        this->last_reg = RegisterAddress::Max;
         goto read_reg_end;
     }
 
