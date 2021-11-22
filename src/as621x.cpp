@@ -19,6 +19,8 @@
 #define get_cfg_value(reg, name) (((reg) >> (name##_SHIFT)) & (name##_MASK))
 #define get_reg_value(cfg, name) (((cfg) & (name##_MASK)) << (name##_SHIFT))
 
+static char buf[3];
+
 namespace sixtron {
 
 As621x::As621x(I2C *bus, Add1Pin add1, Add0Pin add0): _bus(bus)
@@ -112,7 +114,6 @@ bool As621x::is_alert_enabled()
 As621x::ErrorType As621x::write_register(RegisterAddress reg, uint16_t value)
 {
     ErrorType err = ErrorType::Ok;
-    char buf[3];
 
     this->_bus->lock();
 
@@ -138,7 +139,7 @@ write_reg_end:
 As621x::ErrorType As621x::read_register(RegisterAddress reg, uint16_t *value)
 {
     ErrorType err = ErrorType::Ok;
-    char buf[2];
+
     char addr = static_cast<char>(reg);
     this->_bus->lock();
 
