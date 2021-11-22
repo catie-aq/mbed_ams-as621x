@@ -25,10 +25,10 @@ namespace sixtron {
 #define SINGLESHOT_MASK (0x1)
 
 /*!
- *  \class As621x
- *  AS621x temperature sensor driver
+ *  \class AS621X
+ *  AS621X temperature sensor driver
  */
-class As621x {
+class AS621X {
 public:
     enum class ErrorType : uint8_t {
         Ok = 0,
@@ -90,7 +90,7 @@ public:
      * \param add1 ADD1 pin connection
      * \param add0 ADD0 pin connection
      */
-    As621x(I2C *bus, Add1Pin add1, Add0Pin add0);
+    AS621X(I2C *bus, Add1Pin add1, Add0Pin add0);
 
     /*!
      * \brief Read configuration register

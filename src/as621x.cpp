@@ -23,7 +23,7 @@ static char buf[3];
 
 namespace sixtron {
 
-As621x::As621x(I2C *bus, Add1Pin add1, Add0Pin add0): _bus(bus)
+AS621X::AS621X(I2C *bus, Add1Pin add1, Add0Pin add0): _bus(bus)
 {
     this->last_reg = RegisterAddress::Max;
 
@@ -44,7 +44,7 @@ As621x::As621x(I2C *bus, Add1Pin add1, Add0Pin add0): _bus(bus)
             << 1;
 }
 
-As621x::ErrorType As621x::read_config(Config_t *cfg)
+AS621X::ErrorType AS621X::read_config(Config_t *cfg)
 {
     uint16_t value;
     ErrorType err;
@@ -63,7 +63,7 @@ As621x::ErrorType As621x::read_config(Config_t *cfg)
     return err;
 }
 
-As621x::ErrorType As621x::write_config(Config_t *cfg)
+AS621X::ErrorType AS621X::write_config(Config_t *cfg)
 {
     uint16_t value = 0;
 
@@ -77,7 +77,7 @@ As621x::ErrorType As621x::write_config(Config_t *cfg)
     return this->write_register(RegisterAddress::Config, value);
 }
 
-As621x::ErrorType As621x::read_temperature(RegisterAddress reg, double *value)
+AS621X::ErrorType AS621X::read_temperature(RegisterAddress reg, double *value)
 {
     ErrorType err;
     uint16_t temp;
@@ -95,7 +95,7 @@ As621x::ErrorType As621x::read_temperature(RegisterAddress reg, double *value)
     return err;
 }
 
-As621x::ErrorType As621x::write_temperature(RegisterAddress reg, double value)
+AS621X::ErrorType AS621X::write_temperature(RegisterAddress reg, double value)
 {
     int16_t temp = round(value * 128);
 
@@ -106,12 +106,12 @@ As621x::ErrorType As621x::write_temperature(RegisterAddress reg, double value)
     return this->write_register(reg, (uint16_t)temp);
 }
 
-bool As621x::is_alert_enabled()
+bool AS621X::is_alert_enabled()
 {
     return this->alert_en;
 }
 
-As621x::ErrorType As621x::write_register(RegisterAddress reg, uint16_t value)
+AS621X::ErrorType AS621X::write_register(RegisterAddress reg, uint16_t value)
 {
     ErrorType err = ErrorType::Ok;
 
@@ -136,7 +136,7 @@ write_reg_end:
     return err;
 }
 
-As621x::ErrorType As621x::read_register(RegisterAddress reg, uint16_t *value)
+AS621X::ErrorType AS621X::read_register(RegisterAddress reg, uint16_t *value)
 {
     ErrorType err = ErrorType::Ok;
 
