@@ -42,7 +42,7 @@ As621x::As621x(I2C *bus, Add1Pin add1, Add0Pin add0): _bus(bus)
             << 1;
 }
 
-As621x::ErrorType As621x::read_config(Config *cfg)
+As621x::ErrorType As621x::read_config(Config_t *cfg)
 {
     uint16_t value;
     ErrorType err;
@@ -61,7 +61,7 @@ As621x::ErrorType As621x::read_config(Config *cfg)
     return err;
 }
 
-As621x::ErrorType As621x::write_config(Config *cfg)
+As621x::ErrorType As621x::write_config(Config_t *cfg)
 {
     uint16_t value = 0;
 

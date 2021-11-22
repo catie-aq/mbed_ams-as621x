@@ -74,12 +74,12 @@ public:
         bool polarity;
         ConsecutiveFaults cf;
         bool single_shot;
-    } Config;
+    } Config_t;
 
     As621x(I2C *bus, Add1Pin add1, Add0Pin add0);
 
-    ErrorType read_config(Config *cfg);
-    ErrorType write_config(Config *cfg);
+    ErrorType read_config(Config_t *cfg);
+    ErrorType write_config(Config_t *cfg);
 
     ErrorType read_temperature(RegisterAddress reg, double *value);
     ErrorType write_temperature(RegisterAddress reg, double value);
