@@ -30,12 +30,21 @@ namespace sixtron {
  */
 class AS621X {
 public:
+    /*!
+     * \brief Commands error codes
+     */
     enum class ErrorType : uint8_t {
+        /** Command successful */
         Ok = 0,
+        /** Error returned by I2C communication */
         I2cError = 1,
+        /** Invalid register requested */
         InvalidReg = 2,
     };
 
+    /*!
+     * \brief ADD0 pin strapping
+     */
     enum class Add0Pin : uint8_t {
         VSS = 0,
         VDD = 1,
@@ -43,12 +52,18 @@ public:
         SCL = 3,
     };
 
+    /*!
+     * \brief ADD1 pin strapping
+     */
     enum class Add1Pin : uint8_t {
         SCL = 1,
         VSS = 2,
         PullUp_VDD = 3,
     };
 
+    /*!
+     * \brief Conversion rates configurations
+     */
     enum class ConversionRate : uint8_t {
         _4s = 0,
         _1s = 1,
@@ -56,6 +71,9 @@ public:
         _125ms = 3,
     };
 
+    /*!
+     * \brief Consecutive faults configurations
+     */
     enum class ConsecutiveFaults : uint8_t {
         _1CF = 0,
         _2CF = 1,
@@ -63,11 +81,19 @@ public:
         _4CF = 3,
     };
 
+    /*!
+     * \brief Chip registers
+     */
     enum class RegisterAddress : uint8_t {
+        /** Current temperature register */
         Tval = 0,
+        /** Configuration register */
         Config = 1,
+        /** Lower limit temperature register */
         TLow = 2,
+        /** Higher limit temperature register */
         THigh = 3,
+        /** Internal use only */
         Max = 4,
     };
 
@@ -75,12 +101,20 @@ public:
      * \brief Configuration register data
      */
     typedef struct {
+        /** Alert bit status */
         bool alert_bit;
+        /** Conversion rate */
         ConversionRate cr;
+        /** Sleep mode if true, continuous conversion mode if false */
         bool sleep_mode;
+        /** Interrupt mode if true, comparator mode if false */
         bool interrupt_mode;
+        /** Polarity active high if true, active low if false */
         bool polarity;
+        /** Consecutive faults before triggering alarm */
         ConsecutiveFaults cf;
+        /** Start single single / conversion ongoing if true,
+            No conversion ongoing or conversion finished if false */
         bool single_shot;
     } Config_t;
 
@@ -143,7 +177,8 @@ private:
     RegisterAddress last_reg;
     bool alert_en;
 
-    /*! Set register value
+    /*!
+     * \brief Set register value
      *
      * \param RegisterAddress register address
      * \param value value to write
@@ -152,7 +187,8 @@ private:
      */
     ErrorType write_register(RegisterAddress reg, uint16_t value);
 
-    /*! Get register value
+    /*!
+     * \brief Get register value
      *
      * \param RegisterAddress register address
      * \param value pointer to store read value
