@@ -120,11 +120,12 @@ public:
 
     /*! Constructor
      *
-     * \param bus pointer to mbed I2C object
+     * \param i2c_sda I2C SDA pin
+     * \param i2c_scl I2C SCL pin
      * \param add1 ADD1 pin connection
      * \param add0 ADD0 pin connection
      */
-    AS621X(I2C *bus, Add1Pin add1, Add0Pin add0);
+    AS621X(PinName i2c_sda, PinName i2c_scl, Add1Pin add1, Add0Pin add0);
 
     /*!
      * \brief Read configuration register
@@ -172,7 +173,7 @@ public:
     bool is_alert_enabled();
 
 private:
-    I2C *_bus;
+    I2C _bus;
     uint8_t addr;
     RegisterAddress last_reg;
     bool alert_en;

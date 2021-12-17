@@ -23,7 +23,7 @@ static char buf[3];
 
 namespace sixtron {
 
-AS621X::AS621X(I2C *bus, Add1Pin add1, Add0Pin add0): _bus(bus)
+AS621X::AS621X(PinName i2c_sda, PinName i2c_scl, Add1Pin add1, Add0Pin add0): _bus(i2c_sda, i2c_scl)
 {
     this->last_reg = RegisterAddress::Max;
 
@@ -115,7 +115,7 @@ AS621X::ErrorType AS621X::write_register(RegisterAddress reg, uint16_t value)
 {
     ErrorType err = ErrorType::Ok;
 
-    this->_bus->lock();
+    this->_bus.lock();
 
     if (reg >= RegisterAddress::Max) {
         err = ErrorType::InvalidReg;
@@ -125,14 +125,14 @@ AS621X::ErrorType AS621X::write_register(RegisterAddress reg, uint16_t value)
     U16_TO_BYTE_ARRAY(value, buf + 1);
     buf[0] = static_cast<char>(reg);
 
-    if (this->_bus->write(this->addr, buf, 3)) {
+    if (this->_bus.write(this->addr, buf, 3)) {
         err = ErrorType::I2cError;
         this->last_reg = RegisterAddress::Max;
     }
     this->last_reg = reg;
 
 write_reg_end:
-    this->_bus->unlock();
+    this->_bus.unlock();
     return err;
 }
 
@@ -141,7 +141,7 @@ AS621X::ErrorType AS621X::read_register(RegisterAddress reg, uint16_t *value)
     ErrorType err = ErrorType::Ok;
 
     char addr = static_cast<char>(reg);
-    this->_bus->lock();
+    this->_bus.lock();
 
     if (reg >= RegisterAddress::Max) {
         err = ErrorType::InvalidReg;
@@ -149,7 +149,7 @@ AS621X::ErrorType AS621X::read_register(RegisterAddress reg, uint16_t *value)
     }
 
     if (this->last_reg != reg) {
-        if (this->_bus->write(this->addr, &addr, 1)) {
+        if (this->_bus.write(this->addr, &addr, 1)) {
             err = ErrorType::I2cError;
             this->last_reg = RegisterAddress::Max;
             goto read_reg_end;
@@ -157,7 +157,7 @@ AS621X::ErrorType AS621X::read_register(RegisterAddress reg, uint16_t *value)
         this->last_reg = reg;
     }
 
-    if (this->_bus->read(this->addr, buf, 2)) {
+    if (this->_bus.read(this->addr, buf, 2)) {
         err = ErrorType::I2cError;
         this->last_reg = RegisterAddress::Max;
         goto read_reg_end;
@@ -166,7 +166,7 @@ AS621X::ErrorType AS621X::read_register(RegisterAddress reg, uint16_t *value)
     BYTE_ARRAY_TO_U16(buf, *value);
 
 read_reg_end:
-    this->_bus->unlock();
+    this->_bus.unlock();
     return err;
 }
 
